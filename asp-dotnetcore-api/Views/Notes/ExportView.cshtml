@@ -1,0 +1,38 @@
+@model List<ASPRad.Models.Notes>
+    @{
+    Layout = "_ReportLayout";
+    var record = Model.First();
+    }
+    <div id="report-title"><h1>Note Details</h1></div>
+    <table class="table table-sm table-striped">
+        <tbody>
+            <tr>
+                <th>Note Id</th>
+                <td>@record.note_id</td>
+            </tr>
+            <tr>
+                <th>Related Entity Type</th>
+                <td>@record.related_entity_type</td>
+            </tr>
+            <tr>
+                <th>Related Entity Id</th>
+                <td>@record.related_entity_id</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>@record.title</td>
+            </tr>
+            <tr>
+                <th>Content</th>
+                <td>@record.content</td>
+            </tr>
+            <tr>
+                <th>Created By</th>
+                <td>@record.created_by</td>
+            </tr>
+            <tr>
+                <th>Created At</th>
+                <td>@record.created_at</td>
+            </tr>
+        </tbody>
+    </table>

@@ -1,0 +1,18 @@
+@model List<ASPRad.Models.TaskStatuses>
+    @{
+    Layout = "_ReportLayout";
+    var record = Model.First();
+    }
+    <div id="report-title"><h1>Task Status Details</h1></div>
+    <table class="table table-sm table-striped">
+        <tbody>
+            <tr>
+                <th>Task Status Id</th>
+                <td>@record.task_status_id</td>
+            </tr>
+            <tr>
+                <th>Status Name</th>
+                <td>@record.status_name</td>
+            </tr>
+        </tbody>
+    </table>

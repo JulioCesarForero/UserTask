@@ -1,0 +1,62 @@
+@model List<ASPRad.Models.Tasks>
+    @{
+    Layout = "_ReportLayout";
+    var record = Model.First();
+    }
+    <div id="report-title"><h1>Task Details</h1></div>
+    <table class="table table-sm table-striped">
+        <tbody>
+            <tr>
+                <th>Task Id</th>
+                <td>@record.task_id</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>@record.title</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>@record.description</td>
+            </tr>
+            <tr>
+                <th>Related Entity Type</th>
+                <td>@record.related_entity_type</td>
+            </tr>
+            <tr>
+                <th>Related Entity Id</th>
+                <td>@record.related_entity_id</td>
+            </tr>
+            <tr>
+                <th>Assigned User Id</th>
+                <td>@record.assigned_user_id</td>
+            </tr>
+            <tr>
+                <th>Priority Id</th>
+                <td>@record.priority_id</td>
+            </tr>
+            <tr>
+                <th>Due Date</th>
+                <td>@record.due_date</td>
+            </tr>
+            <tr>
+                <th>Task Status Id</th>
+                <td>@record.task_status_id</td>
+            </tr>
+            <tr>
+                <th>Reminder Date</th>
+                <td>@record.reminder_date</td>
+            </tr>
+            <tr>
+                <th>Completed At</th>
+                <td>@record.completed_at</td>
+            </tr>
+            <tr>
+                <th>Created At</th>
+                <td>@record.created_at</td>
+            </tr>
+            <tr>
+                <th>Updated At</th>
+                <td>@record.updated_at</td>
+            </tr>
+        </tbody>
+    </table>

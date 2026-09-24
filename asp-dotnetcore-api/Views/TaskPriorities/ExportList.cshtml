@@ -1,0 +1,22 @@
+@model List<ASPRad.Models.TaskPriorities>
+    @{
+    Layout = "_ReportLayout";
+    }
+    <div id="report-title"><h1>Task Priorities</h1></div>
+    <table class="table table-sm table-striped">
+        <thead>
+            <tr>
+                <th>Priority Id</th>
+                <th>Priority Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var record in Model)
+            {
+            <tr>
+                <td>@record.priority_id</td>
+                <td>@record.priority_name</td>
+            </tr>
+            }
+        </tbody>
+    </table>

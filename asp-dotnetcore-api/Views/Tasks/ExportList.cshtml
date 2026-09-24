@@ -1,0 +1,44 @@
+@model List<ASPRad.Models.Tasks>
+    @{
+    Layout = "_ReportLayout";
+    }
+    <div id="report-title"><h1>Tasks</h1></div>
+    <table class="table table-sm table-striped">
+        <thead>
+            <tr>
+                <th>Task Id</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Related Entity Type</th>
+                <th>Related Entity Id</th>
+                <th>Assigned User Id</th>
+                <th>Priority Id</th>
+                <th>Due Date</th>
+                <th>Task Status Id</th>
+                <th>Reminder Date</th>
+                <th>Completed At</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var record in Model)
+            {
+            <tr>
+                <td>@record.task_id</td>
+                <td>@record.title</td>
+                <td>@record.description</td>
+                <td>@record.related_entity_type</td>
+                <td>@record.related_entity_id</td>
+                <td>@record.assigned_user_id</td>
+                <td>@record.priority_id</td>
+                <td>@record.due_date</td>
+                <td>@record.task_status_id</td>
+                <td>@record.reminder_date</td>
+                <td>@record.completed_at</td>
+                <td>@record.created_at</td>
+                <td>@record.updated_at</td>
+            </tr>
+            }
+        </tbody>
+    </table>

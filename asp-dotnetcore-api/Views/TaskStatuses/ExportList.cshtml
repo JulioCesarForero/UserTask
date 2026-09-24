@@ -1,0 +1,22 @@
+@model List<ASPRad.Models.TaskStatuses>
+    @{
+    Layout = "_ReportLayout";
+    }
+    <div id="report-title"><h1>Task Statuses</h1></div>
+    <table class="table table-sm table-striped">
+        <thead>
+            <tr>
+                <th>Task Status Id</th>
+                <th>Status Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var record in Model)
+            {
+            <tr>
+                <td>@record.task_status_id</td>
+                <td>@record.status_name</td>
+            </tr>
+            }
+        </tbody>
+    </table>

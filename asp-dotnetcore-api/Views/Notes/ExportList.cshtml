@@ -1,0 +1,32 @@
+@model List<ASPRad.Models.Notes>
+    @{
+    Layout = "_ReportLayout";
+    }
+    <div id="report-title"><h1>Notes</h1></div>
+    <table class="table table-sm table-striped">
+        <thead>
+            <tr>
+                <th>Note Id</th>
+                <th>Related Entity Type</th>
+                <th>Related Entity Id</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Created By</th>
+                <th>Created At</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var record in Model)
+            {
+            <tr>
+                <td>@record.note_id</td>
+                <td>@record.related_entity_type</td>
+                <td>@record.related_entity_id</td>
+                <td>@record.title</td>
+                <td>@record.content</td>
+                <td>@record.created_by</td>
+                <td>@record.created_at</td>
+            </tr>
+            }
+        </tbody>
+    </table>
