@@ -1,20 +1,19 @@
 
 import { Formik, Form, ErrorMessage } from 'formik';
+import { useLocation } from 'react-router';
 import * as yup from 'yup';
 import { Button } from 'primereact/button';
-import { CheckDuplicate } from 'components/CheckDuplicate';
 import { InputText } from 'primereact/inputtext';
 import { PageRequestError } from 'components/PageRequestError';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { Title } from 'components/Title';
 import useApp from 'hooks/useApp';
 
 import useEditPage from 'hooks/useEditPage';
 const defaultProps = {
 	primaryKey: 'user_id',
 	pageName: 'users',
-	apiPath: 'users/edit',
-	routeName: 'usersedit',
+	apiPath: 'account/edit',
+	routeName: 'usersaccountedit',
 	submitButtonLabel: "Update",
 	formValidationError: "Form is invalid",
 	formValidationMsg: "Please complete the form",
@@ -27,13 +26,14 @@ const defaultProps = {
 	isSubPage: false
 }
 
-const UsersEditPage = (componentProps) => {
+const UsersAccounteditPage = (componentProps) => {
 
 	const props = {
 		...defaultProps,
 		...componentProps
 	}
 		const app = useApp();
+	const location = useLocation();
 	// form validation schema
 	const validationSchema = yup.object().shape({
 		title: yup.string().nullable().label("Title"),
@@ -59,13 +59,7 @@ const UsersEditPage = (componentProps) => {
 	//Event raised on form submit success
 	function afterSubmit(response){
 		app.flashMsg(props.msgTitle, props.msgAfterSave);
-		if(app.isDialogOpen()){
-			app.closeDialogs(); // if page is open as dialog, close dialog
-		}
-		else if(props.redirect) {
-			app.navigate(`/users`);
-		}
-
+		window.location.reload();
 	}
 	// loading form data from api
 	if(loading){
@@ -85,24 +79,7 @@ const UsersEditPage = (componentProps) => {
 	//page is ready when formdata loaded successfully
 	if(pageReady){
 		return (
-<main id="UsersEditPage" className="main-page">
-    { (props.showHeader) && 
-    <section className="page-section mb-4" >
-        <div className="container-fluid">
-            <div className="flex flex-wrap gap-4 items-center gap-4">
-                { !props.isSubPage && 
-                <div className="md:col-span-4 " >
-                    <Button onClick={() => app.navigate(-1)} label=""  className="p-button p-button-text " icon="pi pi-arrow-left"  />
-                </div>
-                }
-                <div className="col-span-full " >
-                    <Title title="Edit User"   titleClass="text-2xl text-primary font-bold" subTitleClass="text-gray-500" iconClass="pi pi-pencil" avatarSize="large"    separator={false} />
-                </div>
-            </div>
-        </div>
-        <hr />
-    </section>
-    }
+<main id="UsersAccounteditPage" className="main-page">
     <section className="page-section " >
         <div className="container-fluid">
             <div className="grid grid-cols-12 gap-4">
@@ -170,16 +147,8 @@ const UsersEditPage = (componentProps) => {
                                                 Username *
                                             </div>
                                             <div className="col-span-full md:col-span-9">
-                                                <CheckDuplicate value={formik.values.username} apiPath="components_data/users_username_exist">
-                                                { (checker) => 
-                                                <>
-                                                <InputText name="username" onBlur={checker.check} onChange={formik.handleChange}  value={formik.values.username}   label="Username" type="text" placeholder="Enter Username"        className={inputClassName(formik?.errors?.username)} />
+                                                <InputText name="username"  onChange={formik.handleChange}  value={formik.values.username}   label="Username" type="text" placeholder="Enter Username"        className={inputClassName(formik?.errors?.username)} />
                                                 <ErrorMessage name="username" component="span" className="p-error" />
-                                                {(!checker.loading && checker.exist) && <small className="p-error">Not available</small>}
-                                                {checker.loading && <small className="text-gray-500">Checking...</small> }
-                                                </>
-                                                }
-                                                </CheckDuplicate>
                                             </div>
                                         </div>
                                     </div>
@@ -203,4 +172,4 @@ const UsersEditPage = (componentProps) => {
 		);
 	}
 }
-export default UsersEditPage;
+export default UsersAccounteditPage;

@@ -105,3 +105,4 @@ C:\RADProjects\usertaskmvp\asp-dotnetcore-api\obj\Debug\net9.0\refint\UserTaskMV
 C:\RADProjects\usertaskmvp\asp-dotnetcore-api\obj\Debug\net9.0\UserTaskMVP.pdb
 C:\RADProjects\usertaskmvp\asp-dotnetcore-api\obj\Debug\net9.0\UserTaskMVP.genruntimeconfig.cache
 C:\RADProjects\usertaskmvp\asp-dotnetcore-api\obj\Debug\net9.0\ref\UserTaskMVP.dll
+C:\RADProjects\usertaskmvp\asp-dotnetcore-api\obj\Debug\net9.0\UserTaskMVP.sourcelink.json

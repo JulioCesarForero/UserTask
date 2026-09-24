@@ -8,13 +8,14 @@ import { Password } from 'primereact/password';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Title } from 'components/Title';
 import useApp from 'hooks/useApp';
+import useAuth from 'hooks/useAuth';
 
 import useAddPage from 'hooks/useAddPage';
 const defaultProps = {
 	primaryKey: 'user_id',
 	pageName: 'users',
-	apiPath: 'users/add',
-	routeName: 'usersadd',
+	apiPath: 'auth/register',
+	routeName: 'usersuserregister',
 	submitButtonLabel: "Submit",
 	formValidationError: "Form is invalid",
 	formValidationMsg: "Please complete the form",
@@ -27,12 +28,13 @@ const defaultProps = {
 	isSubPage: false
 }
 
-const UsersAddPage = (componentProps) => {
+const RegisterPage = (componentProps) => {
 	const props = {
 		...defaultProps,
 		...componentProps
 	}
-		const app = useApp();
+		const auth = useAuth();
+	const app = useApp();
 	
 	//form validation rules
 	const validationSchema = yup.object().shape({
@@ -65,11 +67,13 @@ const UsersAddPage = (componentProps) => {
 	function afterSubmit(response){
 		app.flashMsg(props.msgTitle, props.msgAfterSave);
 		resetForm();
-		if(app.isDialogOpen()){
-			app.closeDialogs(); // if page is open as dialog, close dialog
+		const nextPage = response.nextpage || '/home';
+		if (response.token) {
+			auth.login(response.token, false);
+			app.navigate(nextPage);
 		}
-		else if(props.redirect) {
-			app.navigate(`/users`);
+		else{
+			app.navigate(nextPage);
 		}
 
 	}
@@ -87,28 +91,28 @@ const UsersAddPage = (componentProps) => {
 	//page has loaded any required data and ready to render
 	if(pageReady){
 		return (
-<main id="UsersAddPage" className="main-page">
+<main id="UsersUserregisterPage" className="main-page">
     { (props.showHeader) && 
-    <section className="page-section mb-4" >
+    <section className="page-section md:max-w-[50%] mx-auto" >
         <div className="container-fluid">
-            <div className="flex flex-wrap gap-4 items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4">
                 { !props.isSubPage && 
                 <div className="md:col-span-4 " >
-                    <Button onClick={() => app.navigate(-1)} label=""  className="p-button p-button-text " icon="pi pi-arrow-left"  />
+                    <Button onClick={() => app.navigate(-1)} label="User Login"  className="p-button p-button-text " icon="pi pi-arrow-left"  />
                 </div>
                 }
                 <div className="col-span-full " >
-                    <Title title="Add User"   titleClass="text-2xl text-primary font-bold" subTitleClass="text-gray-500" iconClass="pi pi-plus" avatarSize="large"    separator={false} />
+                    <Title title="User registration"   titleClass="text-2xl text-primary font-bold" subTitleClass="text-gray-500" iconClass="pi pi-user" avatarSize="large"    separator={false} />
                 </div>
             </div>
         </div>
         <hr />
     </section>
     }
-    <section className="page-section " >
+    <section className="page-section md:max-w-[50%] mx-auto" >
         <div className="container-fluid">
             <div className="grid grid-cols-12 gap-4">
-                <div className="col-span-full md:col-span-7 comp-grid" >
+                <div className="col-span-full comp-grid" >
                     <div >
                         <Formik initialValues={formData} validationSchema={validationSchema} onSubmit={(values, actions) =>submitForm(values)}>
                             {(formik) => 
@@ -206,4 +210,4 @@ const UsersAddPage = (componentProps) => {
 	}
 }
 
-export default UsersAddPage;
+export default RegisterPage;

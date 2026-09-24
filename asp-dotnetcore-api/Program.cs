@@ -9,6 +9,11 @@ using System;
 
 
 
+//using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseUrls("http://localhost:8060");
 builder.Services.AddControllers().AddNewtonsoftJson();
@@ -31,6 +36,21 @@ builder.Services.AddTransient<EmailHelper>();
 
 
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)    
+.AddJwtBearer(options =>    
+{    
+	options.TokenValidationParameters = new TokenValidationParameters    
+	{    
+		ValidateIssuer = true,    
+		ValidateAudience = true,    
+		ValidateLifetime = true,    
+		ValidateIssuerSigningKey = true,    
+		ValidIssuer = builder.Configuration["Jwt:Issuer"],    
+		ValidAudience = builder.Configuration["Jwt:Issuer"],    
+		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))    
+	};    
+});
+
 
 string ConStr = builder.Configuration.GetConnectionString("DefaultConnectionString");
 builder.Services.AddDbContext<AppDBContext>(options =>
@@ -49,6 +69,9 @@ app.UseCors(x => x
     .AllowAnyOrigin()
     .AllowAnyMethod()
     .AllowAnyHeader());
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 
 app.MapControllerRoute(name: "default", pattern: "api/{controller=Home}/{action=Index}/{id?}");

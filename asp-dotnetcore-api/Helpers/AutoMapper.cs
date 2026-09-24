@@ -14,6 +14,8 @@ public class AutoMapping : Profile
 		CreateMap<TasksEditDTO, Tasks>();
 		CreateMap<TaskstatusesAddDTO, TaskStatuses>();
 		CreateMap<TaskstatusesEditDTO, TaskStatuses>();
+		CreateMap<UsersRegisterDTO, Users>();
+		CreateMap<UsersAccounteditDTO, Users>();
 		CreateMap<UsersAddDTO, Users>();
 		CreateMap<UsersEditDTO, Users>();
     }

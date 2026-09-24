@@ -1,9 +1,12 @@
 
-import { Routes, Route } from 'react-router';
+import { Routes, Route, Navigate } from 'react-router';
+import useAuth from 'hooks/useAuth';
 
 
 import IndexLayout from 'layouts/IndexLayout';
 import MainLayout from 'layouts/MainLayout';
+import AuthRoutes from 'components/AuthRoutes';
+import IndexPage from 'pages/index/IndexPage';
 import NotesList from 'src/pages/notes/List';
 import NotesView from 'src/pages/notes/View';
 import NotesAdd from 'src/pages/notes/Add';
@@ -24,6 +27,7 @@ import UsersList from 'src/pages/users/List';
 import UsersView from 'src/pages/users/View';
 import UsersAdd from 'src/pages/users/Add';
 import UsersEdit from 'src/pages/users/Edit';
+import AccountPages from 'src/pages/account';
 
 import HomePage from 'pages/home/HomePage';
 import IndexPages from 'pages/index';
@@ -34,10 +38,17 @@ import 'assets/styles/layout.scss';
 import 'src/index.scss';
 
 const App = () => {
+	const auth = useAuth();
+	function DefaultPage(){
+		if(!auth.isLoggedIn){
+			return <IndexPage />
+		}
+		return <Navigate to="/home" replace />;
+	}
 	return (
 		<Routes>
+			<Route exact element={<AuthRoutes />}>
 			<Route element={<MainLayout />}>
-				<Route path="/" element={<HomePage />} />
 				<Route path="/home" element={<HomePage />} />
 				
 
@@ -80,8 +91,11 @@ const App = () => {
 				<Route path="/users/view/:pageid" element={<UsersView />} />
 				<Route path="/users/add" element={<UsersAdd />} />
 				<Route path="/users/edit/:pageid" element={<UsersEdit />} />
+				<Route path="/account/*" element={<AccountPages />} />
+			</Route>
 			</Route>
 			<Route exact element={<IndexLayout />}>
+				<Route path="/" element={<DefaultPage />} />
 				<Route path="/*" element={<IndexPages />} />
 				<Route path="/error/*" element={<ErrorPages />} />
 			</Route>

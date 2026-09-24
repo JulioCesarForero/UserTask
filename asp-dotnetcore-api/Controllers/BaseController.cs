@@ -3,7 +3,7 @@ using System;
 
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-
+using System.Security.Claims;
 using ASPRad.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
@@ -12,12 +12,14 @@ using System.Data;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using ASPRad.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
-
+[Authorize]
 public class BaseController : Controller
 {
 
 	
+	public Users CurrentUser = null!;
 	private readonly AppDBContext DB;
 	private readonly IHttpContextAccessor HttpAccessor;
 	private readonly IWebHostEnvironment hostEnvironment;
@@ -28,6 +30,18 @@ public class BaseController : Controller
 		HttpAccessor = httpContextAccessor;
 		hostEnvironment = environment;
 		Config = Configuration;
+		try{
+			var User = httpContextAccessor.HttpContext.User;
+			if (User.Identity.IsAuthenticated)
+			{
+				var userid = int.Parse(User.FindFirstValue(ClaimTypes.Name));
+				CurrentUser = DB.Users.Where(p => p.user_id.Equals(userid)).FirstOrDefault();
+			}
+		}
+		catch(Exception ex)
+		{
+			Console.WriteLine(ex);
+		}
 	}
 
 	

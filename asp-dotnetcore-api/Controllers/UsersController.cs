@@ -24,7 +24,8 @@ namespace ASPRad.Controller{
 	using WkWrap.Core;
     using System.Text;
 
-	
+	using Microsoft.AspNetCore.Authorization;
+
 	
 
 	/// <summary>
@@ -73,8 +74,7 @@ namespace ASPRad.Controller{
 							};
 				if(search != null){
 					query = query.Where(
-						p => EF.Functions.Like(p.user_id.ToString(), $"%{search}%") || 
-						EF.Functions.Like(p.title, $"%{search}%") || 
+						p => EF.Functions.Like(p.title, $"%{search}%") || 
 						EF.Functions.Like(p.first_name, $"%{search}%") || 
 						EF.Functions.Like(p.last_name, $"%{search}%") || 
 						EF.Functions.Like(p.email, $"%{search}%") || 
@@ -215,10 +215,7 @@ namespace ASPRad.Controller{
 					return BadRequest(ModelState);
 				}
 				var modeldata = new Users();
-								modeldata.title = postdata.title;
-				modeldata.first_name = postdata.first_name;
-				modeldata.last_name = postdata.last_name;
-				modeldata.email = postdata.email;
+								modeldata.email = postdata.email;
 				modeldata.phone = postdata.phone;
 				modeldata.username = postdata.username;
 				modeldata.password = postdata.password;
@@ -250,7 +247,6 @@ namespace ASPRad.Controller{
 						title = Users.title,
 						first_name = Users.first_name,
 						last_name = Users.last_name,
-						email = Users.email,
 						phone = Users.phone,
 						username = Users.username
 					};
@@ -284,6 +280,9 @@ namespace ASPRad.Controller{
 				}
 				var query = from Users in DB.Users
 							select Users;
+				if (DB.Users.Any(p => p.username.Equals(postdata.username) &&  !p.user_id.Equals(id))){
+					return BadRequest(postdata.username + " " + " Already exist!");
+				}
 				query = query.Where(p => p.user_id.Equals(id));
 				var record = query.FirstOrDefault();
 				if (record == null)
@@ -295,7 +294,6 @@ namespace ASPRad.Controller{
 								modeldata.title = postdata.title;
 				modeldata.first_name = postdata.first_name;
 				modeldata.last_name = postdata.last_name;
-				modeldata.email = postdata.email;
 				modeldata.phone = postdata.phone;
 				modeldata.username = postdata.username;
 				DB.Update(modeldata);

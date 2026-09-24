@@ -21,7 +21,8 @@ namespace ASPRad.Controller{
 	/// <summary>
 	/// Components Data Controller
 	/// </summary>
-	
+	using Microsoft.AspNetCore.Authorization;
+    [AllowAnonymous]
 	public class Components_Data:BaseController
 	{
 		private readonly IConfiguration Config;
@@ -91,6 +92,38 @@ namespace ASPRad.Controller{
 			}
 		);
 		return Ok(records) ;
+	}
+
+	
+
+	/// <summary>
+	/// check if field value already exist in a Users table
+	/// </summary>
+	/// <param name="id">value to check if exists in a table records.</param>
+	/// <returns>True or False</returns>
+	[HttpGet]
+	public ActionResult users_email_exist(string id = ""){
+		bool exist = DB.Users.Any(p => p.email == id);
+		if(exist == true){
+			return Ok("true");
+		}
+		return Ok("false") ;
+	}
+
+	
+
+	/// <summary>
+	/// check if field value already exist in a Users table
+	/// </summary>
+	/// <param name="id">value to check if exists in a table records.</param>
+	/// <returns>True or False</returns>
+	[HttpGet]
+	public ActionResult users_username_exist(string id = ""){
+		bool exist = DB.Users.Any(p => p.username == id);
+		if(exist == true){
+			return Ok("true");
+		}
+		return Ok("false") ;
 	}
 	}
 }

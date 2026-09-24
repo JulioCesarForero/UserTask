@@ -24,7 +24,8 @@ namespace ASPRad.Controller{
 	using WkWrap.Core;
     using System.Text;
 
-	
+	using Microsoft.AspNetCore.Authorization;
+
 	
 
 	/// <summary>
