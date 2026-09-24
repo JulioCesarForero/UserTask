@@ -22,6 +22,8 @@ namespace ASPRad.Models{
 		public DateTime? updated_at { get; set; } = default!;
 		[Key]
 		public int task_id { get; set; } = default!;
+		public DateTime? date_created { get; set; } = default!;
+		public DateTime? date_updated { get; set; } = default!;
 
 	}
 

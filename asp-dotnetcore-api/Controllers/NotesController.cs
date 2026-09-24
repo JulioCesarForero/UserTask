@@ -70,7 +70,9 @@ namespace ASPRad.Controller{
 						title = Notes.title,
 						content = Notes.content,
 						created_by = Notes.created_by,
-						created_at = Notes.created_at
+						created_at = Notes.created_at,
+						date_created = Notes.date_created,
+						date_updated = Notes.date_updated
 							};
 				if(search != null){
 					query = query.Where(
@@ -178,7 +180,9 @@ namespace ASPRad.Controller{
 						title = Notes.title,
 						content = Notes.content,
 						created_by = Notes.created_by,
-						created_at = Notes.created_at
+						created_at = Notes.created_at,
+						date_created = Notes.date_created,
+						date_updated = Notes.date_updated
 							};
 				query = query.Where(p => p.note_id.Equals(id));
 				// export page records
@@ -218,6 +222,8 @@ namespace ASPRad.Controller{
 				modeldata.title = postdata.title;
 				modeldata.content = postdata.content;
 				modeldata.created_by = postdata.created_by;
+				modeldata.date_created = DateTime.Now;
+				modeldata.date_updated = DateTime.Now;
 				// save Notes record
 				DB.Notes.Add(modeldata);
 				var record = modeldata; //newly created record
@@ -291,6 +297,7 @@ namespace ASPRad.Controller{
 				modeldata.title = postdata.title;
 				modeldata.content = postdata.content;
 				modeldata.created_by = postdata.created_by;
+				modeldata.date_updated = DateTime.Now;
 				DB.Update(modeldata);
 				DB.SaveChanges();
 				return Ok(record);
@@ -346,7 +353,9 @@ namespace ASPRad.Controller{
 					    new DataHeader { Header = "Title", Key = "title" },
 					    new DataHeader { Header = "Content", Key = "content" },
 					    new DataHeader { Header = "Created By", Key = "created_by" },
-					    new DataHeader { Header = "Created At", Key = "created_at" }
+					    new DataHeader { Header = "Created At", Key = "created_at" },
+					    new DataHeader { Header = "Date Created", Key = "date_created" },
+					    new DataHeader { Header = "Date Updated", Key = "date_updated" }
 					};
 					var dataTable = records.ToDataTable(Columns);
 					dataTable.TableName = "Notes"; // Excel worksheet title
@@ -396,7 +405,9 @@ namespace ASPRad.Controller{
 					    new DataHeader { Header = "Title", Key = "title" },
 					    new DataHeader { Header = "Content", Key = "content" },
 					    new DataHeader { Header = "Created By", Key = "created_by" },
-					    new DataHeader { Header = "Created At", Key = "created_at" }
+					    new DataHeader { Header = "Created At", Key = "created_at" },
+					    new DataHeader { Header = "Date Created", Key = "date_created" },
+					    new DataHeader { Header = "Date Updated", Key = "date_updated" }
 					};
 					var dataTable = records.ToDataTable(Columns);
 					dataTable.TableName = "Notes"; // Excel worksheet title

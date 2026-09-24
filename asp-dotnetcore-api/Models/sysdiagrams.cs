@@ -10,11 +10,11 @@ namespace ASPRad.Models{
 	{
 		public string name { get; set; } = default!;
 		public int principal_id { get; set; } = default!;
-		[Key]
-		public int diagram_id { get; set; } = default!;
 		public int? version { get; set; } = default!;
 		[NotMapped]
 		public byte[]? definition { get; set; } = default!;
+		[Key]
+		public int diagram_id { get; set; } = default!;
 
 	}
 

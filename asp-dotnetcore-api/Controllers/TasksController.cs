@@ -76,7 +76,9 @@ namespace ASPRad.Controller{
 						reminder_date = Tasks.reminder_date,
 						completed_at = Tasks.completed_at,
 						created_at = Tasks.created_at,
-						updated_at = Tasks.updated_at
+						updated_at = Tasks.updated_at,
+						date_created = Tasks.date_created,
+						date_updated = Tasks.date_updated
 							};
 				if(search != null){
 					query = query.Where(
@@ -190,7 +192,9 @@ namespace ASPRad.Controller{
 						reminder_date = Tasks.reminder_date,
 						completed_at = Tasks.completed_at,
 						created_at = Tasks.created_at,
-						updated_at = Tasks.updated_at
+						updated_at = Tasks.updated_at,
+						date_created = Tasks.date_created,
+						date_updated = Tasks.date_updated
 							};
 				query = query.Where(p => p.task_id.Equals(id));
 				// export page records
@@ -235,6 +239,8 @@ namespace ASPRad.Controller{
 				modeldata.task_status_id = postdata.task_status_id;
 				modeldata.reminder_date = postdata.reminder_date;
 				modeldata.completed_at = postdata.completed_at;
+				modeldata.date_created = DateTime.Now;
+				modeldata.date_updated = DateTime.Now;
 				// save Tasks record
 				DB.Tasks.Add(modeldata);
 				var record = modeldata; //newly created record
@@ -318,6 +324,7 @@ namespace ASPRad.Controller{
 				modeldata.task_status_id = postdata.task_status_id;
 				modeldata.reminder_date = postdata.reminder_date;
 				modeldata.completed_at = postdata.completed_at;
+				modeldata.date_updated = DateTime.Now;
 				DB.Update(modeldata);
 				DB.SaveChanges();
 				return Ok(record);
@@ -379,7 +386,9 @@ namespace ASPRad.Controller{
 					    new DataHeader { Header = "Reminder Date", Key = "reminder_date" },
 					    new DataHeader { Header = "Completed At", Key = "completed_at" },
 					    new DataHeader { Header = "Created At", Key = "created_at" },
-					    new DataHeader { Header = "Updated At", Key = "updated_at" }
+					    new DataHeader { Header = "Updated At", Key = "updated_at" },
+					    new DataHeader { Header = "Date Created", Key = "date_created" },
+					    new DataHeader { Header = "Date Updated", Key = "date_updated" }
 					};
 					var dataTable = records.ToDataTable(Columns);
 					dataTable.TableName = "Tasks"; // Excel worksheet title
@@ -435,7 +444,9 @@ namespace ASPRad.Controller{
 					    new DataHeader { Header = "Reminder Date", Key = "reminder_date" },
 					    new DataHeader { Header = "Completed At", Key = "completed_at" },
 					    new DataHeader { Header = "Created At", Key = "created_at" },
-					    new DataHeader { Header = "Updated At", Key = "updated_at" }
+					    new DataHeader { Header = "Updated At", Key = "updated_at" },
+					    new DataHeader { Header = "Date Created", Key = "date_created" },
+					    new DataHeader { Header = "Date Updated", Key = "date_updated" }
 					};
 					var dataTable = records.ToDataTable(Columns);
 					dataTable.TableName = "Tasks"; // Excel worksheet title

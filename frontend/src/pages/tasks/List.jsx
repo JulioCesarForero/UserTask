@@ -319,6 +319,8 @@ const TasksListPage = (componentProps) => {
                                 <Column  field="completed_at" header="Completed At"   ></Column>
                                 <Column  field="created_at" header="Created At"   ></Column>
                                 <Column  field="updated_at" header="Updated At"   ></Column>
+                                <Column  field="date_created" header="Date Created"   ></Column>
+                                <Column  field="date_updated" header="Date Updated"   ></Column>
                                 <Column headerStyle={{width: '2rem'}} headerClass="text-center" body={ActionButton}></Column>
                                 {/*PageComponentEnd*/}
                             </DataTable>

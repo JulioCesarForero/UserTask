@@ -8,9 +8,9 @@ namespace ASPRad.Models{
 	[Table("roles", Schema = "dbo")]
 	public class Roles : BaseRecord
 	{
+		public string role_name { get; set; } = default!;
 		[Key]
 		public int role_id { get; set; } = default!;
-		public string role_name { get; set; } = default!;
 
 	}
 

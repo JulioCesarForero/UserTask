@@ -232,6 +232,22 @@ const TasksViewPage = (componentProps ) => {
                                     </div>
                                 </div>
                             </div>
+                            <div className="col-span-full md:col-span-4">
+                                <div className="flex gap-2 items-center card p-3 nice-shadow-2">
+                                    <div>
+                                        <div className="text-gray-600 mb-1">Date Created</div>
+                                        <div className="font-bold">{ item.date_created }</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-span-full md:col-span-4">
+                                <div className="flex gap-2 items-center card p-3 nice-shadow-2">
+                                    <div>
+                                        <div className="text-gray-600 mb-1">Date Updated</div>
+                                        <div className="font-bold">{ item.date_updated }</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         {/*PageComponentEnd*/}
                     </div>

@@ -15,9 +15,9 @@ namespace ASPRad.Models{
 		public string? phone { get; set; } = default!;
 		public string username { get; set; } = default!;
 		public string password { get; set; } = default!;
+		public int? user_role_id { get; set; } = default!;
 		[Key]
 		public int user_id { get; set; } = default!;
-		public int? user_role_id { get; set; } = default!;
 	}
 
 	public class UsersRegisterDTO

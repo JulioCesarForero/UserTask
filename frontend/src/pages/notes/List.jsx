@@ -295,6 +295,8 @@ const NotesListPage = (componentProps) => {
                                 <Column  field="content" header="Content"   ></Column>
                                 <Column  field="created_by" header="Created By" body={CreatedByTemplate}  ></Column>
                                 <Column  field="created_at" header="Created At"   ></Column>
+                                <Column  field="date_created" header="Date Created"   ></Column>
+                                <Column  field="date_updated" header="Date Updated"   ></Column>
                                 <Column headerStyle={{width: '2rem'}} headerClass="text-center" body={ActionButton}></Column>
                                 {/*PageComponentEnd*/}
                             </DataTable>

@@ -8,10 +8,10 @@ namespace ASPRad.Models{
 	[Table("permissions", Schema = "dbo")]
 	public class Permissions : BaseRecord
 	{
-		[Key]
-		public int permission_id { get; set; } = default!;
 		public int? role_id { get; set; } = default!;
 		public string permission { get; set; } = default!;
+		[Key]
+		public int permission_id { get; set; } = default!;
 
 	}
 
