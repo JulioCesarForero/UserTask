@@ -39,8 +39,8 @@ namespace ASPRad.Controller{
 		private readonly AppDBContext DB;
 		private readonly IMapper Mapper;
 		private readonly IWebHostEnvironment hostEnvironment;
-		
-		public UsersController(AppDBContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment environment, IConfiguration Configuration, EmailHelper mailer) :base(dbContext, httpContextAccessor, environment, Configuration)
+		private readonly Rbac rbac;
+		public UsersController(AppDBContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment environment, IConfiguration Configuration, EmailHelper mailer, Rbac _rbac) :base(dbContext, httpContextAccessor, environment, Configuration)
 		{
 			Config = Configuration;
 			Mailer = mailer;
@@ -48,7 +48,7 @@ namespace ASPRad.Controller{
 			DB = dbContext;
 			Mapper = mapper;
 			hostEnvironment = environment;
-			
+			rbac = _rbac;
 		}
 		
 
@@ -70,7 +70,8 @@ namespace ASPRad.Controller{
 						last_name = Users.last_name,
 						email = Users.email,
 						phone = Users.phone,
-						username = Users.username
+						username = Users.username,
+						user_role_id = Users.user_role_id
 							};
 				if(search != null){
 					query = query.Where(
@@ -180,7 +181,8 @@ namespace ASPRad.Controller{
 						last_name = Users.last_name,
 						email = Users.email,
 						phone = Users.phone,
-						username = Users.username
+						username = Users.username,
+						user_role_id = Users.user_role_id
 							};
 				query = query.Where(p => p.user_id.Equals(id));
 				// export page records
@@ -219,7 +221,12 @@ namespace ASPRad.Controller{
 				modeldata.phone = postdata.phone;
 				modeldata.username = postdata.username;
 				modeldata.password = postdata.password;
+				modeldata.user_role_id = postdata.user_role_id;
 				modeldata.password = Hash.ComputeHash(postdata.password);
+				
+				// assign default role to user
+				var roleId = DB.Roles.Where(p => p.role_name == "Admin").Select(p => p.role_id).FirstOrDefault();
+				modeldata.user_role_id = roleId;
 				// save Users record
 				DB.Users.Add(modeldata);
 				var record = modeldata; //newly created record
@@ -248,7 +255,8 @@ namespace ASPRad.Controller{
 						first_name = Users.first_name,
 						last_name = Users.last_name,
 						phone = Users.phone,
-						username = Users.username
+						username = Users.username,
+						user_role_id = Users.user_role_id
 					};
 				query = query.Where(p => p.user_id.Equals(id));
 				var record = query.FirstOrDefault();
@@ -296,6 +304,7 @@ namespace ASPRad.Controller{
 				modeldata.last_name = postdata.last_name;
 				modeldata.phone = postdata.phone;
 				modeldata.username = postdata.username;
+				modeldata.user_role_id = postdata.user_role_id;
 				DB.Update(modeldata);
 				DB.SaveChanges();
 				return Ok(record);
@@ -351,7 +360,8 @@ namespace ASPRad.Controller{
 					    new DataHeader { Header = "Last Name", Key = "last_name" },
 					    new DataHeader { Header = "Email", Key = "email" },
 					    new DataHeader { Header = "Phone", Key = "phone" },
-					    new DataHeader { Header = "Username", Key = "username" }
+					    new DataHeader { Header = "Username", Key = "username" },
+					    new DataHeader { Header = "User Role Id", Key = "user_role_id" }
 					};
 					var dataTable = records.ToDataTable(Columns);
 					dataTable.TableName = "Users"; // Excel worksheet title
@@ -401,7 +411,8 @@ namespace ASPRad.Controller{
 					    new DataHeader { Header = "Last Name", Key = "last_name" },
 					    new DataHeader { Header = "Email", Key = "email" },
 					    new DataHeader { Header = "Phone", Key = "phone" },
-					    new DataHeader { Header = "Username", Key = "username" }
+					    new DataHeader { Header = "Username", Key = "username" },
+					    new DataHeader { Header = "User Role Id", Key = "user_role_id" }
 					};
 					var dataTable = records.ToDataTable(Columns);
 					dataTable.TableName = "Users"; // Excel worksheet title

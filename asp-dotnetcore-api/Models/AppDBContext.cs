@@ -14,6 +14,12 @@ namespace ASPRad.Models{
 	{
 	public DbSet<Notes> Notes { get; set; } = null!;
 
+	public DbSet<Permissions> Permissions { get; set; } = null!;
+
+	public DbSet<Roles> Roles { get; set; } = null!;
+
+	public DbSet<Sysdiagrams> Sysdiagrams { get; set; } = null!;
+
 	public DbSet<TaskPriorities> TaskPriorities { get; set; } = null!;
 
 	public DbSet<Tasks> Tasks { get; set; } = null!;

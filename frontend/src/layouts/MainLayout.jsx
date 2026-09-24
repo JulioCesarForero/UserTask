@@ -71,8 +71,8 @@ const MainLayout = () => {
 			setMobileMenuActive(false);
 		}
 	}
-	const navbarSideLeft = app.menus.navbarSideLeft;
-const navbarTopRight = app.menus.navbarTopRight;
+	const navbarSideLeft = app.menus.navbarSideLeft.filter((menu) => auth.canView(menu.to));
+const navbarTopRight = app.menus.navbarTopRight.filter((menu) => auth.canView(menu.to));
 	const wrapperClass = classNames('layout-wrapper', setContainerClass());
 
 	function setContainerClass(){
@@ -137,6 +137,8 @@ const navbarTopRight = app.menus.navbarTopRight;
 			<Avatar size="large" shape="circle" icon="pi pi-user" />
 			<div className="flex flex-col gap-1 font-bold">
 				Hi { auth.userName }
+	{auth.userRole && <div className="text-gray-500">{ auth.userRole}</div>}
+
 			</div>
 		</Link>
 		<Divider className="my-2" />

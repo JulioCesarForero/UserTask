@@ -1,9 +1,12 @@
 
+import { Button } from 'primereact/button';
 import { ExportPageData } from 'components/ExportPageData';
 import { Menubar } from 'primereact/menubar';
 import { PageRequestError } from 'components/PageRequestError';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import RolesViewPage from 'pages/roles/View';
 import useApp from 'hooks/useApp';
+import useAuth from 'hooks/useAuth';
 import UsersEditPage from 'pages/users/Edit';
 import useUtils from 'hooks/useUtils';
 
@@ -29,7 +32,8 @@ const UsersAccountviewPage = (componentProps ) => {
 		...defaultProps,
 		...componentProps
 	}
-		const app = useApp();
+		const auth = useAuth();
+	const app = useApp();
 	const utils = useUtils();
 	const pageController = useViewPage(props);
 	const { item, pageReady, loading, apiUrl, apiRequestError, deleteItem } = pageController;
@@ -38,14 +42,23 @@ const UsersAccountviewPage = (componentProps ) => {
 		{
 			label: "Edit",
 			command: (event) => { app.openPageDialog(<UsersEditPage isSubPage apiPath={`/users/edit/${data.user_id}`} />, {closeBtn: true }) },
-			icon: "pi pi-pencil"
+			icon: "pi pi-pencil",
+			visible: () => auth.canView('users/edit')
 		},
 		{
 			label: "Delete",
 			command: (event) => { deleteItem(data.user_id) },
-			icon: "pi pi-trash"
+			icon: "pi pi-trash",
+			visible: () => auth.canView('users/delete')
 		}
 	]
+	.filter((item) => {
+		if(item.visible){
+			return item.visible()
+		}
+		return true;
+	});
+
 		return (<Menubar className="p-0 " model={items} />);
 	}
 	function ExportData() {
@@ -150,6 +163,14 @@ const UsersAccountviewPage = (componentProps ) => {
                                     <div>
                                         <div className="text-gray-600 mb-1">User Id</div>
                                         <div className="font-bold">{ item.user_id }</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-span-full md:col-span-4">
+                                <div className="flex gap-2 items-center card p-3 nice-shadow-2">
+                                    <div>
+                                        <div className="text-gray-600 mb-1">User Role Id</div>
+                                        <div className="font-bold">{item.user_role_id && <Button className="p-button-text" icon="pi pi-eye" label="Roles Detail" onClick={() => app.openPageDialog(<RolesViewPage isSubPage apiPath={`/roles/view/${item.user_role_id}`} />, {closeBtn: true })} /> }</div>
                                     </div>
                                 </div>
                             </div>

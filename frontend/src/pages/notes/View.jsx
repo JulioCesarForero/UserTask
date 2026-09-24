@@ -7,13 +7,14 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { Title } from 'components/Title';
 import NotesEditPage from 'pages/notes/Edit';
 import useApp from 'hooks/useApp';
+import useAuth from 'hooks/useAuth';
 import UsersViewPage from 'pages/users/View';
 import useUtils from 'hooks/useUtils';
 
 import useViewPage from 'hooks/useViewPage';
 const defaultProps = {
 	id: null,
-	primaryKey: 'created_by',
+	primaryKey: 'note_id',
 	pageName: 'notes',
 	apiPath: 'notes/view',
 	routeName: 'notesview',
@@ -32,7 +33,8 @@ const NotesViewPage = (componentProps ) => {
 		...defaultProps,
 		...componentProps
 	}
-		const app = useApp();
+		const auth = useAuth();
+	const app = useApp();
 	const utils = useUtils();
 	const pageController = useViewPage(props);
 	const { item, pageReady, loading, apiUrl, apiRequestError, deleteItem } = pageController;
@@ -40,15 +42,24 @@ const NotesViewPage = (componentProps ) => {
 		const items = [
 		{
 			label: "Edit",
-			command: (event) => { app.openPageDialog(<NotesEditPage isSubPage apiPath={`/notes/edit/${data.created_by}`} />, {closeBtn: true }) },
-			icon: "pi pi-pencil"
+			command: (event) => { app.openPageDialog(<NotesEditPage isSubPage apiPath={`/notes/edit/${data.note_id}`} />, {closeBtn: true }) },
+			icon: "pi pi-pencil",
+			visible: () => auth.canView('notes/edit')
 		},
 		{
 			label: "Delete",
-			command: (event) => { deleteItem(data.created_by) },
-			icon: "pi pi-trash"
+			command: (event) => { deleteItem(data.note_id) },
+			icon: "pi pi-trash",
+			visible: () => auth.canView('notes/delete')
 		}
 	]
+	.filter((item) => {
+		if(item.visible){
+			return item.visible()
+		}
+		return true;
+	});
+
 		return (<Menubar className="p-0 " model={items} />);
 	}
 	function ExportData() {

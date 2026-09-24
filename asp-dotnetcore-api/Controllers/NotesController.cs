@@ -39,8 +39,8 @@ namespace ASPRad.Controller{
 		private readonly AppDBContext DB;
 		private readonly IMapper Mapper;
 		private readonly IWebHostEnvironment hostEnvironment;
-		
-		public NotesController(AppDBContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment environment, IConfiguration Configuration, EmailHelper mailer) :base(dbContext, httpContextAccessor, environment, Configuration)
+		private readonly Rbac rbac;
+		public NotesController(AppDBContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment environment, IConfiguration Configuration, EmailHelper mailer, Rbac _rbac) :base(dbContext, httpContextAccessor, environment, Configuration)
 		{
 			Config = Configuration;
 			Mailer = mailer;
@@ -48,7 +48,7 @@ namespace ASPRad.Controller{
 			DB = dbContext;
 			Mapper = mapper;
 			hostEnvironment = environment;
-			
+			rbac = _rbac;
 		}
 		
 
@@ -85,7 +85,7 @@ namespace ASPRad.Controller{
 					query = query.OrderByField(orderby, asc);
 				}
 				else{
-					query = query.OrderByField("created_by", false);
+					query = query.OrderByField("note_id", false);
 				}
 				if(fieldvalue != null)
 				{
@@ -180,7 +180,7 @@ namespace ASPRad.Controller{
 						created_by = Notes.created_by,
 						created_at = Notes.created_at
 							};
-				query = query.Where(p => p.created_by.Equals(id));
+				query = query.Where(p => p.note_id.Equals(id));
 				// export page records
 				if (Request.Query.ContainsKey("export")){
 					var exportRecords = query.ToList();
@@ -222,7 +222,7 @@ namespace ASPRad.Controller{
 				DB.Notes.Add(modeldata);
 				var record = modeldata; //newly created record
 				DB.SaveChanges();
-				var recId = record.created_by; //newly created record id
+				var recId = record.note_id; //newly created record id
 				return Ok(record);
 			}
 			catch (Exception ex){
@@ -241,13 +241,14 @@ namespace ASPRad.Controller{
 			try{
 				var query = from Notes in DB.Notes
 					select new Notes {
+						note_id = Notes.note_id,
 						related_entity_type = Notes.related_entity_type,
 						related_entity_id = Notes.related_entity_id,
 						title = Notes.title,
 						content = Notes.content,
 						created_by = Notes.created_by
 					};
-				query = query.Where(p => p.created_by.Equals(id));
+				query = query.Where(p => p.note_id.Equals(id));
 				var record = query.FirstOrDefault();
 				if (record == null)
 				{
@@ -277,7 +278,7 @@ namespace ASPRad.Controller{
 				}
 				var query = from Notes in DB.Notes
 							select Notes;
-				query = query.Where(p => p.created_by.Equals(id));
+				query = query.Where(p => p.note_id.Equals(id));
 				var record = query.FirstOrDefault();
 				if (record == null)
 				{
@@ -312,7 +313,7 @@ namespace ASPRad.Controller{
 				var query = DB.Notes.AsQueryable();
 
 				List<string> arrId = id.Split(",").ToList();
-				query = query.Where(p => arrId.Contains(p.created_by.ToString()));
+				query = query.Where(p => arrId.Contains(p.note_id.ToString()));
 				DB.Notes.RemoveRange(query);
 				DB.SaveChanges();
 				return Ok(id);

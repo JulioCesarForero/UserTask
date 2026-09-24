@@ -12,9 +12,9 @@ namespace ASPRad.Models{
 		public int related_entity_id { get; set; } = default!;
 		public string? title { get; set; } = default!;
 		public string content { get; set; } = default!;
-		[Key]
 		public int created_by { get; set; } = default!;
 		public DateTime created_at { get; set; } = default!;
+		[Key]
 		public int note_id { get; set; } = default!;
 
 	}
@@ -28,7 +28,6 @@ namespace ASPRad.Models{
 		public string? title { get; set; } = default!;
 		[Required]
 		public string content { get; set; } = default!;
-		[Key]
 		[Required]
 		public int created_by { get; set; } = default!;
 
@@ -43,7 +42,6 @@ namespace ASPRad.Models{
 		public string? title { get; set; } = default!;
 		[RequiredIfEmpty]
 		public string content { get; set; } = default!;
-		[Key]
 		[RequiredIfEmpty]
 		public int created_by { get; set; } = default!;
 

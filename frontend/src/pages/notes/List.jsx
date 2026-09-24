@@ -1,6 +1,7 @@
 
 import { BreadCrumb } from 'primereact/breadcrumb';
 import { Button } from 'primereact/button';
+import { CanView } from 'components/Can';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { ExportPageData } from 'components/ExportPageData';
@@ -17,12 +18,13 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { Title } from 'components/Title';
 import NotesAddPage from 'pages/notes/Add';
 import useApp from 'hooks/useApp';
+import useAuth from 'hooks/useAuth';
 import UsersViewPage from 'pages/users/View';
 import useUtils from 'hooks/useUtils';
 
 import useListPage from 'hooks/useListPage';
 const defaultProps = {
-	primaryKey: 'created_by',
+	primaryKey: 'note_id',
 	pageName: 'notes',
 	apiPath: 'notes/index',
 	routeName: 'noteslist',
@@ -54,7 +56,8 @@ const NotesListPage = (componentProps) => {
 		...componentProps
 	}
 
-		const app = useApp();
+		const auth = useAuth();
+	const app = useApp();
 	const utils = useUtils();
 	const filterSchema = {
 		search: {
@@ -74,26 +77,36 @@ const NotesListPage = (componentProps) => {
 		const items = [
 		{
 			label: "View",
-			command: (event) => { app.navigate(`/notes/view/${data.created_by}`) },
-			icon: "pi pi-eye"
+			command: (event) => { app.navigate(`/notes/view/${data.note_id}`) },
+			icon: "pi pi-eye",
+			visible: () => auth.canView('notes/view')
 		},
 		{
 			label: "Edit",
-			command: (event) => { app.navigate(`/notes/edit/${data.created_by}`) },
-			icon: "pi pi-pencil"
+			command: (event) => { app.navigate(`/notes/edit/${data.note_id}`) },
+			icon: "pi pi-pencil",
+			visible: () => auth.canView('notes/edit')
 		},
 		{
 			label: "Delete",
-			command: (event) => { deleteItem(data.created_by) },
-			icon: "pi pi-trash"
+			command: (event) => { deleteItem(data.note_id) },
+			icon: "pi pi-trash",
+			visible: () => auth.canView('notes/delete')
 		}
 	]
+	.filter((item) => {
+		if(item.visible){
+			return item.visible()
+		}
+		return true;
+	});
+
 		return (<PopupMenu items={items} />);
 	}
 	function NoteIdTemplate(data){
 		if(data){
 			return (
-				<Link to={`/notes/view/${data.created_by}`}> { data.note_id }</Link>
+				<Link to={`/notes/view/${data.note_id}`}> { data.note_id }</Link>
 
 			);
 		}
@@ -177,9 +190,15 @@ const NotesListPage = (componentProps) => {
 	function PageActionButtons() {
 		return (
 			<div className="flex flex-wrap gap-3 items-center">
-				<MultiDelete />
+	<CanView pagePath="notes/delete">
+		<MultiDelete />
+	</CanView>
+
 				<ExportData />
-				<ImportData />
+	<CanView pagePath="notes/importdata">
+		<ImportData />
+	</CanView>
+
 			</div>
 		);
 	}
@@ -231,7 +250,9 @@ const NotesListPage = (componentProps) => {
         <div className="container-fluid">
             <div className="flex flex-wrap justify-between items-center gap-3">
                 <div className="col-span-full " >
-                    <Button label="Add Note" icon="pi pi-plus"  onClick={()=>app.openPageDialog(<NotesAddPage isSubPage apiPath={`/notes/add`} />, { closeBtn: true  })}  className="p-button w-full bg-primary "  />
+                    <CanView pagePath="notes/add">
+                        <Button label="Add Note" icon="pi pi-plus"  onClick={()=>app.openPageDialog(<NotesAddPage isSubPage apiPath={`/notes/add`} />, { closeBtn: true  })}  className="p-button w-full bg-primary "  />
+                    </CanView>
                 </div>
                 <div className="col-span-full " >
                     <IconField>
@@ -255,7 +276,7 @@ const NotesListPage = (componentProps) => {
                                 loading={loading} 
                                 selectionMode="checkbox" selection={selectedItems} onSelectionChange={e => setSelectedItems(e.value)}
                                 value={records} 
-                                dataKey="created_by" 
+                                dataKey="note_id" 
                                 sortField={sortBy} 
                                 sortOrder={sortOrder} 
                                 onSort={onSort}

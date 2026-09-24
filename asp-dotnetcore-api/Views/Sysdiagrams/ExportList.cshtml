@@ -1,0 +1,28 @@
+@model List<ASPRad.Models.Sysdiagrams>
+    @{
+    Layout = "_ReportLayout";
+    }
+    <div id="report-title"><h1>Sysdiagrams</h1></div>
+    <table class="table table-sm table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Principal Id</th>
+                <th>Diagram Id</th>
+                <th>Version</th>
+                <th>Definition</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var record in Model)
+            {
+            <tr>
+                <td>@record.name</td>
+                <td>@record.principal_id</td>
+                <td>@record.diagram_id</td>
+                <td>@record.version</td>
+                <td>@record.definition</td>
+            </tr>
+            }
+        </tbody>
+    </table>

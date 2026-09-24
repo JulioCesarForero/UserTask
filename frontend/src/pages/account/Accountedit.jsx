@@ -3,6 +3,8 @@ import { Formik, Form, ErrorMessage } from 'formik';
 import { useLocation } from 'react-router';
 import * as yup from 'yup';
 import { Button } from 'primereact/button';
+import { DataSource } from 'components/DataSource';
+import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import { PageRequestError } from 'components/PageRequestError';
 import { ProgressSpinner } from 'primereact/progressspinner';
@@ -40,7 +42,8 @@ const UsersAccounteditPage = (componentProps) => {
 		first_name: yup.string().required().label("First Name"),
 		last_name: yup.string().required().label("Last Name"),
 		phone: yup.string().nullable().label("Phone"),
-		username: yup.string().required().label("Username")
+		username: yup.string().required().label("Username"),
+		user_role_id: yup.string().nullable().label("User Role Id")
 	});
 
 	// form default values
@@ -50,6 +53,7 @@ const UsersAccounteditPage = (componentProps) => {
 		last_name: '', 
 		phone: '', 
 		username: '', 
+		user_role_id: '', 
 	}
 
 	//where page logics resides
@@ -149,6 +153,24 @@ const UsersAccounteditPage = (componentProps) => {
                                             <div className="col-span-full md:col-span-9">
                                                 <InputText name="username"  onChange={formik.handleChange}  value={formik.values.username}   label="Username" type="text" placeholder="Enter Username"        className={inputClassName(formik?.errors?.username)} />
                                                 <ErrorMessage name="username" component="span" className="p-error" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-span-full">
+                                        <div className="grid grid-cols-12 gap-3">
+                                            <div className="col-span-full md:col-span-3">
+                                                User Role Id 
+                                            </div>
+                                            <div className="col-span-full md:col-span-9">
+                                                <DataSource   apiPath="components_data/user_role_id_option_list"  >
+                                                    {
+                                                    ({ response }) => 
+                                                    <>
+                                                    <Dropdown  name="user_role_id"     optionLabel="label" optionValue="value" value={formik.values.user_role_id} onChange={formik.handleChange} options={response} label="User Role Id"  placeholder="Select a value ..."  className={inputClassName(formik?.errors?.user_role_id)}   />
+                                                    <ErrorMessage name="user_role_id" component="span" className="p-error" />
+                                                    </>
+                                                    }
+                                                </DataSource>
                                             </div>
                                         </div>
                                     </div>

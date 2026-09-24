@@ -1,6 +1,7 @@
 
 import { BreadCrumb } from 'primereact/breadcrumb';
 import { Button } from 'primereact/button';
+import { CanView } from 'components/Can';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { ExportPageData } from 'components/ExportPageData';
@@ -17,6 +18,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { Title } from 'components/Title';
 import TaskstatusesAddPage from 'pages/taskstatuses/Add';
 import useApp from 'hooks/useApp';
+import useAuth from 'hooks/useAuth';
 import useUtils from 'hooks/useUtils';
 
 import useListPage from 'hooks/useListPage';
@@ -53,7 +55,8 @@ const TaskstatusesListPage = (componentProps) => {
 		...componentProps
 	}
 
-		const app = useApp();
+		const auth = useAuth();
+	const app = useApp();
 	const utils = useUtils();
 	const filterSchema = {
 		search: {
@@ -74,19 +77,29 @@ const TaskstatusesListPage = (componentProps) => {
 		{
 			label: "View",
 			command: (event) => { app.navigate(`/taskstatuses/view/${data.task_status_id}`) },
-			icon: "pi pi-eye"
+			icon: "pi pi-eye",
+			visible: () => auth.canView('taskstatuses/view')
 		},
 		{
 			label: "Edit",
 			command: (event) => { app.navigate(`/taskstatuses/edit/${data.task_status_id}`) },
-			icon: "pi pi-pencil"
+			icon: "pi pi-pencil",
+			visible: () => auth.canView('taskstatuses/edit')
 		},
 		{
 			label: "Delete",
 			command: (event) => { deleteItem(data.task_status_id) },
-			icon: "pi pi-trash"
+			icon: "pi pi-trash",
+			visible: () => auth.canView('taskstatuses/delete')
 		}
 	]
+	.filter((item) => {
+		if(item.visible){
+			return item.visible()
+		}
+		return true;
+	});
+
 		return (<PopupMenu items={items} />);
 	}
 	function TaskStatusIdTemplate(data){
@@ -168,9 +181,15 @@ const TaskstatusesListPage = (componentProps) => {
 	function PageActionButtons() {
 		return (
 			<div className="flex flex-wrap gap-3 items-center">
-				<MultiDelete />
+	<CanView pagePath="taskstatuses/delete">
+		<MultiDelete />
+	</CanView>
+
 				<ExportData />
-				<ImportData />
+	<CanView pagePath="taskstatuses/importdata">
+		<ImportData />
+	</CanView>
+
 			</div>
 		);
 	}
@@ -222,7 +241,9 @@ const TaskstatusesListPage = (componentProps) => {
         <div className="container-fluid">
             <div className="flex flex-wrap justify-between items-center gap-3">
                 <div className="col-span-full " >
-                    <Button label="Add Task Status" icon="pi pi-plus"  onClick={()=>app.openPageDialog(<TaskstatusesAddPage isSubPage apiPath={`/taskstatuses/add`} />, { closeBtn: true  })}  className="p-button w-full bg-primary "  />
+                    <CanView pagePath="taskstatuses/add">
+                        <Button label="Add Task Status" icon="pi pi-plus"  onClick={()=>app.openPageDialog(<TaskstatusesAddPage isSubPage apiPath={`/taskstatuses/add`} />, { closeBtn: true  })}  className="p-button w-full bg-primary "  />
+                    </CanView>
                 </div>
                 <div className="col-span-full " >
                     <IconField>

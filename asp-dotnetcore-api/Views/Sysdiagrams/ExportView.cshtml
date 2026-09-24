@@ -1,0 +1,30 @@
+@model List<ASPRad.Models.Sysdiagrams>
+    @{
+    Layout = "_ReportLayout";
+    var record = Model.First();
+    }
+    <div id="report-title"><h1>Sysdiagram Details</h1></div>
+    <table class="table table-sm table-striped">
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <td>@record.name</td>
+            </tr>
+            <tr>
+                <th>Principal Id</th>
+                <td>@record.principal_id</td>
+            </tr>
+            <tr>
+                <th>Diagram Id</th>
+                <td>@record.diagram_id</td>
+            </tr>
+            <tr>
+                <th>Version</th>
+                <td>@record.version</td>
+            </tr>
+            <tr>
+                <th>Definition</th>
+                <td>@record.definition</td>
+            </tr>
+        </tbody>
+    </table>

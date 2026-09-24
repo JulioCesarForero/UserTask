@@ -9,6 +9,7 @@ import TaskprioritiesViewPage from 'pages/taskpriorities/View';
 import TasksEditPage from 'pages/tasks/Edit';
 import TaskstatusesViewPage from 'pages/taskstatuses/View';
 import useApp from 'hooks/useApp';
+import useAuth from 'hooks/useAuth';
 import UsersViewPage from 'pages/users/View';
 import useUtils from 'hooks/useUtils';
 
@@ -34,7 +35,8 @@ const TasksViewPage = (componentProps ) => {
 		...defaultProps,
 		...componentProps
 	}
-		const app = useApp();
+		const auth = useAuth();
+	const app = useApp();
 	const utils = useUtils();
 	const pageController = useViewPage(props);
 	const { item, pageReady, loading, apiUrl, apiRequestError, deleteItem } = pageController;
@@ -43,14 +45,23 @@ const TasksViewPage = (componentProps ) => {
 		{
 			label: "Edit",
 			command: (event) => { app.openPageDialog(<TasksEditPage isSubPage apiPath={`/tasks/edit/${data.task_id}`} />, {closeBtn: true }) },
-			icon: "pi pi-pencil"
+			icon: "pi pi-pencil",
+			visible: () => auth.canView('tasks/edit')
 		},
 		{
 			label: "Delete",
 			command: (event) => { deleteItem(data.task_id) },
-			icon: "pi pi-trash"
+			icon: "pi pi-trash",
+			visible: () => auth.canView('tasks/delete')
 		}
 	]
+	.filter((item) => {
+		if(item.visible){
+			return item.visible()
+		}
+		return true;
+	});
+
 		return (<Menubar className="p-0 " model={items} />);
 	}
 	function ExportData() {

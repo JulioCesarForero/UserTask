@@ -33,6 +33,7 @@ IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddTransient<EmailHelper>();
 
+builder.Services.AddTransient<Rbac>();
 
 
 

@@ -1,12 +1,18 @@
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import useLocalStore from 'hooks/useLocalStore';
 import useApi from 'hooks/useApi';
 import useUtils from 'hooks/useUtils';
 
 const publicPages = ['/', 'index', 'error', ]; //public pages which do not need authentation
+
+const roleAbilities = {
+  "admin": [],
+  "user": []
+};
 const AuthContext = createContext();
+
 export function AuthProvider({ children }) {
 	const api = useApi();
 	const utils = useUtils();
@@ -18,15 +24,20 @@ export function AuthProvider({ children }) {
 	if(accessToken){
 		loggedIn = true;
 	}
+
 	const [user, setUser] = useState(null);
 	const [userName, setUserName] = useState('');
 	const [userId, setUserId] = useState('');
 	const [userEmail, setUserEmail] = useState('');
-	const [userPhone, setUserPhone] = useState('');
 	const [userPhoto, setUserPhoto] = useState('');
+	const [userPhone, setUserPhone] = useState('');
+	const [userRole, setUserRole] = useState('');
+	const [userPages, setUserPages] = useState([]);
+
 	const [isLoggedIn, setIsLoggedIn] = useState(loggedIn);
 	const [error, setError] = useState(null);
 	const [loading, setLoading] = useState(true);
+
 	useEffect(() => {
 		getUserData();
 	}, [accessToken]);
@@ -37,14 +48,18 @@ export function AuthProvider({ children }) {
 				setIsLoggedIn(true);
 				setLoading(true);
 				const response = await api.get('account/currentuserdata');
-				const userData = response.data;
+				const apiData = response?.data;
+				const userData = apiData?.user;
+				const userRoleName = apiData?.roles.toString();
 				if(userData){
 					setUser(userData);
+					setUserPages(apiData.pages);
 					setUserName(userData.username);
 					setUserId(userData.user_id);
 					setUserEmail(userData.email);
 					setUserPhoto(null);
 					setUserPhone(userData.phone);
+					setUserRole(userRoleName);
 				}
 			}
 			else {
@@ -59,7 +74,7 @@ export function AuthProvider({ children }) {
 			setLoading(false);
 		}
 	}
-
+	
 	async function login(token) {
 		localStore.saveLoginData({ token });
 		setIsLoggedIn(true);
@@ -83,12 +98,33 @@ export function AuthProvider({ children }) {
 		return !publicPages.includes(pageName) && !publicPages.includes(routePath);
 	}
 
+	function canView(path){
+		const { routePath } = utils.parseRoutePath(path);
+		return userPages.includes(routePath);
+	}
+
+	function canManage(page, userRecId){
+		if(userRole){
+			let userRoleAbilities = roleAbilities[userRole.toLowerCase()] || [];
+			if (userRoleAbilities.includes(page)){
+				return true;
+			}
+		}
+		return userRecId == user.user_id;
+	}
+
 	function isOwner(userRecId) {
 		if(user){
-			return userRecId === userId;
+			return userRecId == user.user_id;
 		}
 		return false;
 	}
+
+	
+	const isAdmin = userRole.toLowerCase() === 'admin';
+
+	const isUser = userRole.toLowerCase() === 'user';
+
 
 	const providerValue = {
 		user,
@@ -97,15 +133,20 @@ export function AuthProvider({ children }) {
 		userEmail,
 		userPhone,
 		userPhoto,
+		userRole,
 		loading,
 		isLoggedIn,
 		accessToken,
 		error,
-		isOwner,
+		loading,
 		getUserData,
 		pageRequiredAuth,
 		login,
 		logout,
+		canView,
+		canManage,
+		isOwner,
+		isAdmin, isUser
 	}
 
 	return (

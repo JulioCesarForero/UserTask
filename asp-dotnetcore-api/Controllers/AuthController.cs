@@ -100,6 +100,11 @@ namespace ASPRad.Controller{
 				modeldata.username = postdata.username;
 				modeldata.password = postdata.password;
 				modeldata.password = Hash.ComputeHash(postdata.password);
+				
+				// assign default role to user
+				var roleId = DB.Roles.Where(p => p.role_name == "Admin").Select(p => p.role_id).FirstOrDefault();
+				modeldata.user_role_id = roleId;
+
 				DB.Users.Add(modeldata);
 				DB.SaveChanges();
 				
@@ -216,6 +221,8 @@ namespace ASPRad.Controller{
 				new Claim(JwtRegisteredClaimNames.Sub, Config["Jwt:Subject"]),
 				new Claim(ClaimTypes.Name, user.user_id.ToString()),
 			};
+			claims.Add(new Claim(ClaimTypes.Role, user.user_role_id.ToString()));
+
 			var token = new JwtSecurityToken(Config["Jwt:Issuer"],    
 				Config["Jwt:Issuer"],    
 				claims,    

@@ -1,5 +1,6 @@
 
 import { useEffect } from 'react';
+import { CanView } from 'components/Can';
 import { TabView, TabPanel } from 'primereact/tabview';
 import { Title } from 'components/Title';
 import TasksListPage from 'pages/tasks/List';
@@ -38,10 +39,12 @@ const MasterDetailPages = (props) => {
 <div id="master-detailpage">
     <TabView value={activeTab}>
         <TabPanel header={<Title title="Task Priority Tasks"  headerClass="p-0" titleClass="text-lg font-bold"  iconClass="pi pi-th-large" avatarSize="small"    separator={false} />}>
-            <div className="reset-grid">
-                <TasksListPage isSubPage  fieldName="priority_id" fieldValue={masterRecord.priority_id} showBreadcrumbs={false} showHeader={false} showFooter={true}>
-                </TasksListPage>
-            </div>
+            <CanView pagePath="tasks">
+                <div className="reset-grid">
+                    <TasksListPage isSubPage  fieldName="priority_id" fieldValue={masterRecord.priority_id} showBreadcrumbs={false} showHeader={false} showFooter={true}>
+                    </TasksListPage>
+                </div>
+            </CanView>
         </TabPanel>
     </TabView>
 </div>

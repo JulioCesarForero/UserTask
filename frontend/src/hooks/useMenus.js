@@ -11,7 +11,29 @@ export default function useMenus() {
     
     
     return {
-	navbarTopRight: [],
+	navbarTopRight: [
+  {
+    "to": "/sysdiagrams",
+    "label": "Sysdiagrams",
+    "icon": "pi pi-th-large",
+    "iconcolor": "",
+    "target": "",
+  },
+  {
+    "to": "/roles",
+    "label": "Roles",
+    "icon": "pi pi-th-large",
+    "iconcolor": "",
+    "target": "",
+  },
+  {
+    "to": "/permissions",
+    "label": "Permissions",
+    "icon": "pi pi-th-large",
+    "iconcolor": "",
+    "target": "",
+  }
+],
 	navbarSideLeft: [
   {
     "to": "/home",
@@ -51,6 +73,27 @@ export default function useMenus() {
   {
     "to": "/users",
     "label": "Users",
+    "icon": "pi pi-th-large",
+    "iconcolor": "",
+    "target": "",
+  },
+  {
+    "to": "/sysdiagrams",
+    "label": "Sysdiagrams",
+    "icon": "pi pi-th-large",
+    "iconcolor": "",
+    "target": "",
+  },
+  {
+    "to": "/roles",
+    "label": "Roles",
+    "icon": "pi pi-th-large",
+    "iconcolor": "",
+    "target": "",
+  },
+  {
+    "to": "/permissions",
+    "label": "Permissions",
     "icon": "pi pi-th-large",
     "iconcolor": "",
     "target": "",

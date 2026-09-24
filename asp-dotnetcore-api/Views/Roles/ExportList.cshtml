@@ -1,0 +1,22 @@
+@model List<ASPRad.Models.Roles>
+    @{
+    Layout = "_ReportLayout";
+    }
+    <div id="report-title"><h1>Roles</h1></div>
+    <table class="table table-sm table-striped">
+        <thead>
+            <tr>
+                <th>Role Id</th>
+                <th>Role Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var record in Model)
+            {
+            <tr>
+                <td>@record.role_id</td>
+                <td>@record.role_name</td>
+            </tr>
+            }
+        </tbody>
+    </table>

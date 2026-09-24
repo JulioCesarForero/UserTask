@@ -15,6 +15,7 @@ using ASPRad.Helpers;
 using Microsoft.AspNetCore.Authorization;
 
 [Authorize]
+[AuthorizeRole]
 public class BaseController : Controller
 {
 

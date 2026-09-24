@@ -7,6 +7,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { Title } from 'components/Title';
 import TaskprioritiesEditPage from 'pages/taskpriorities/Edit';
 import useApp from 'hooks/useApp';
+import useAuth from 'hooks/useAuth';
 import useUtils from 'hooks/useUtils';
 
 import useViewPage from 'hooks/useViewPage';
@@ -32,7 +33,8 @@ const TaskprioritiesViewPage = (componentProps ) => {
 		...defaultProps,
 		...componentProps
 	}
-		const app = useApp();
+		const auth = useAuth();
+	const app = useApp();
 	const utils = useUtils();
 	const pageController = useViewPage(props);
 	const { item, currentRecord, pageReady, loading, apiUrl, apiRequestError, deleteItem } = pageController;
@@ -41,14 +43,23 @@ const TaskprioritiesViewPage = (componentProps ) => {
 		{
 			label: "Edit",
 			command: (event) => { app.openPageDialog(<TaskprioritiesEditPage isSubPage apiPath={`/taskpriorities/edit/${data.priority_id}`} />, {closeBtn: true }) },
-			icon: "pi pi-pencil"
+			icon: "pi pi-pencil",
+			visible: () => auth.canView('taskpriorities/edit')
 		},
 		{
 			label: "Delete",
 			command: (event) => { deleteItem(data.priority_id) },
-			icon: "pi pi-trash"
+			icon: "pi pi-trash",
+			visible: () => auth.canView('taskpriorities/delete')
 		}
 	]
+	.filter((item) => {
+		if(item.visible){
+			return item.visible()
+		}
+		return true;
+	});
+
 		return (<Menubar className="p-0 " model={items} />);
 	}
 	function ExportData() {

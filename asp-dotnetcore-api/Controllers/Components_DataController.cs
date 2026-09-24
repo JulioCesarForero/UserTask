@@ -57,6 +57,26 @@ namespace ASPRad.Controller{
 	
 
 	/// <summary>
+	/// Get role_id_option_list records
+	/// </summary>
+	/// <returns>Array of option labels and value object</returns>
+	[HttpGet]
+	public ActionResult role_id_option_list()
+	{
+		string sqlText = "SELECT role_id as value, role_name as label FROM dbo.roles" ;
+		var queryParams = new List<QueryParam>();
+		var records =  DB.RawSqlQuery(sqlText, queryParams,
+			record => new {
+				value = record["value"],
+				label = record["label"]
+			}
+		);
+		return Ok(records) ;
+	}
+
+	
+
+	/// <summary>
 	/// Get priority_id_option_list records
 	/// </summary>
 	/// <returns>Array of option labels and value object</returns>
@@ -124,6 +144,26 @@ namespace ASPRad.Controller{
 			return Ok("true");
 		}
 		return Ok("false") ;
+	}
+
+	
+
+	/// <summary>
+	/// Get user_role_id_option_list records
+	/// </summary>
+	/// <returns>Array of option labels and value object</returns>
+	[HttpGet]
+	public ActionResult user_role_id_option_list()
+	{
+		string sqlText = "SELECT role_id AS value, role_name AS label FROM roles" ;
+		var queryParams = new List<QueryParam>();
+		var records =  DB.RawSqlQuery(sqlText, queryParams,
+			record => new {
+				value = record["value"],
+				label = record["label"]
+			}
+		);
+		return Ok(records) ;
 	}
 	}
 }

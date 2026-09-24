@@ -7,6 +7,7 @@
 namespace ASPRad.Controller{
 	using System;
 	using Microsoft.AspNetCore.Mvc;
+	using System.Collections.Generic;
 	using Microsoft.Extensions.Logging;
 	using System.Linq;
 	using System.Linq.Dynamic.Core;
@@ -27,7 +28,9 @@ namespace ASPRad.Controller{
 		private IQueryable<Users> Query;
 		private readonly IMapper Mapper;
 		private readonly IWebHostEnvironment hostEnvironment;
-		public AccountController(AppDBContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment environment, IConfiguration Configuration, EmailHelper mailer) :base(dbContext, httpContextAccessor, environment, Configuration)
+		private readonly Rbac rbac;
+
+		public AccountController(AppDBContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment environment, IConfiguration Configuration, EmailHelper mailer, Rbac _rbac) :base(dbContext, httpContextAccessor, environment, Configuration)
 		{
 			Config = Configuration;
 			Mailer = mailer;
@@ -35,6 +38,7 @@ namespace ASPRad.Controller{
 			Query = DB.Users;
 			Mapper = mapper;
 			hostEnvironment = environment;
+			rbac = _rbac;
 		}
 		
 
@@ -54,7 +58,8 @@ namespace ASPRad.Controller{
 						email = Users.email,
 						phone = Users.phone,
 						username = Users.username,
-						user_id = Users.user_id
+						user_id = Users.user_id,
+						user_role_id = Users.user_role_id
 					};
 				query = query.Where(p => p.user_id.Equals(id)); // filter by current user id
 				var record = query.FirstOrDefault();
@@ -87,7 +92,8 @@ namespace ASPRad.Controller{
 						last_name = Users.last_name,
 						phone = Users.phone,
 						username = Users.username,
-						user_id = Users.user_id
+						user_id = Users.user_id,
+						user_role_id = Users.user_role_id
 					};
 				query = query.Where(p => p.user_id.Equals(id));  // filter by current user id
 				var record = query.FirstOrDefault();
@@ -135,6 +141,7 @@ namespace ASPRad.Controller{
 				modeldata.last_name = postdata.last_name;
 				modeldata.phone = postdata.phone;
 				modeldata.username = postdata.username;
+				modeldata.user_role_id = postdata.user_role_id;
 				DB.Update(modeldata);
 				DB.SaveChanges();
 				return Ok(record);
@@ -145,11 +152,28 @@ namespace ASPRad.Controller{
 		}
 		public ActionResult CurrentUserData()
 		{
-			if(CurrentUser != null){
-				CurrentUser.password = "";
-				return Ok(CurrentUser);
+			try
+			{
+				var userPages = new List<string>();
+				var roleNames = new List<string>();
+				if(CurrentUser != null){
+					var userRole = CurrentUser.user_role_id;
+					userPages = rbac.GetRolePages(userRole);
+					roleNames = rbac.GetRoleNames(userRole);
+					CurrentUser.password = "";
+					var data = new {
+						user = CurrentUser,
+						pages = userPages,
+						roles = roleNames
+					};
+					return Ok(data);
+				}
+				return NotFound("User not found");
 			}
-			return NotFound("User not found");
+			catch (Exception ex)
+			{
+				return ServerError(ex);
+			}
 		}
 		
 

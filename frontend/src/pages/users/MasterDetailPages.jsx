@@ -1,5 +1,6 @@
 
 import { useEffect } from 'react';
+import { CanView } from 'components/Can';
 import { TabView, TabPanel } from 'primereact/tabview';
 import { Title } from 'components/Title';
 import NotesListPage from 'pages/notes/List';
@@ -43,16 +44,20 @@ const MasterDetailPages = (props) => {
 <div id="master-detailpage">
     <TabView value={activeTab}>
         <TabPanel header={<Title title="User Notes"  headerClass="p-0" titleClass="text-lg font-bold"  iconClass="pi pi-th-large" avatarSize="small"    separator={false} />}>
-            <div className="reset-grid">
-                <NotesListPage isSubPage  fieldName="created_by" fieldValue={masterRecord.user_id} showBreadcrumbs={false} showHeader={false} showFooter={true}>
-                </NotesListPage>
-            </div>
+            <CanView pagePath="notes">
+                <div className="reset-grid">
+                    <NotesListPage isSubPage  fieldName="created_by" fieldValue={masterRecord.user_id} showBreadcrumbs={false} showHeader={false} showFooter={true}>
+                    </NotesListPage>
+                </div>
+            </CanView>
         </TabPanel>
         <TabPanel header={<Title title="User Tasks"  headerClass="p-0" titleClass="text-lg font-bold"  iconClass="pi pi-th-large" avatarSize="small"    separator={false} />}>
-            <div className="reset-grid">
-                <TasksListPage isSubPage  fieldName="assigned_user_id" fieldValue={masterRecord.user_id} showBreadcrumbs={false} showHeader={false} showFooter={true}>
-                </TasksListPage>
-            </div>
+            <CanView pagePath="tasks">
+                <div className="reset-grid">
+                    <TasksListPage isSubPage  fieldName="assigned_user_id" fieldValue={masterRecord.user_id} showBreadcrumbs={false} showHeader={false} showFooter={true}>
+                    </TasksListPage>
+                </div>
+            </CanView>
         </TabPanel>
     </TabView>
 </div>

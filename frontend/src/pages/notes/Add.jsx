@@ -12,7 +12,7 @@ import useApp from 'hooks/useApp';
 
 import useAddPage from 'hooks/useAddPage';
 const defaultProps = {
-	primaryKey: 'created_by',
+	primaryKey: 'note_id',
 	pageName: 'notes',
 	apiPath: 'notes/add',
 	routeName: 'notesadd',

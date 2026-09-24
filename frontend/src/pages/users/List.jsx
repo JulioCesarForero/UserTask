@@ -1,6 +1,7 @@
 
 import { BreadCrumb } from 'primereact/breadcrumb';
 import { Button } from 'primereact/button';
+import { CanView } from 'components/Can';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { ExportPageData } from 'components/ExportPageData';
@@ -15,7 +16,9 @@ import { Paginator } from 'primereact/paginator';
 import { PopupMenu } from 'components/PopupMenu';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Title } from 'components/Title';
+import RolesViewPage from 'pages/roles/View';
 import useApp from 'hooks/useApp';
+import useAuth from 'hooks/useAuth';
 import UsersAddPage from 'pages/users/Add';
 import useUtils from 'hooks/useUtils';
 
@@ -53,7 +56,8 @@ const UsersListPage = (componentProps) => {
 		...componentProps
 	}
 
-		const app = useApp();
+		const auth = useAuth();
+	const app = useApp();
 	const utils = useUtils();
 	const filterSchema = {
 		search: {
@@ -74,19 +78,29 @@ const UsersListPage = (componentProps) => {
 		{
 			label: "View",
 			command: (event) => { app.navigate(`/users/view/${data.user_id}`) },
-			icon: "pi pi-eye"
+			icon: "pi pi-eye",
+			visible: () => auth.canView('users/view')
 		},
 		{
 			label: "Edit",
 			command: (event) => { app.navigate(`/users/edit/${data.user_id}`) },
-			icon: "pi pi-pencil"
+			icon: "pi pi-pencil",
+			visible: () => auth.canView('users/edit')
 		},
 		{
 			label: "Delete",
 			command: (event) => { deleteItem(data.user_id) },
-			icon: "pi pi-trash"
+			icon: "pi pi-trash",
+			visible: () => auth.canView('users/delete')
 		}
 	]
+	.filter((item) => {
+		if(item.visible){
+			return item.visible()
+		}
+		return true;
+	});
+
 		return (<PopupMenu items={items} />);
 	}
 	function UserIdTemplate(data){
@@ -112,6 +126,14 @@ const UsersListPage = (componentProps) => {
 			return (
 	<a className="p-button-text" href={`tel:${data.phone}`}>{ data.phone }</a>
 
+			);
+		}
+	}
+
+	function UserRoleIdTemplate(data){
+		if(data){
+			return (
+				<>{data.user_role_id && <Button className="p-button-text" icon="pi pi-eye" label="Roles" onClick={() => app.openPageDialog(<RolesViewPage isSubPage apiPath={`/roles/view/${data.user_role_id}`} />, {closeBtn: true })} /> }</>
 			);
 		}
 	}
@@ -186,9 +208,15 @@ const UsersListPage = (componentProps) => {
 	function PageActionButtons() {
 		return (
 			<div className="flex flex-wrap gap-3 items-center">
-				<MultiDelete />
+	<CanView pagePath="users/delete">
+		<MultiDelete />
+	</CanView>
+
 				<ExportData />
-				<ImportData />
+	<CanView pagePath="users/importdata">
+		<ImportData />
+	</CanView>
+
 			</div>
 		);
 	}
@@ -240,7 +268,9 @@ const UsersListPage = (componentProps) => {
         <div className="container-fluid">
             <div className="flex flex-wrap justify-between items-center gap-3">
                 <div className="col-span-full " >
-                    <Button label="Add User" icon="pi pi-plus"  onClick={()=>app.openPageDialog(<UsersAddPage isSubPage apiPath={`/users/add`} />, { closeBtn: true  })}  className="p-button w-full bg-primary "  />
+                    <CanView pagePath="users/add">
+                        <Button label="Add User" icon="pi pi-plus"  onClick={()=>app.openPageDialog(<UsersAddPage isSubPage apiPath={`/users/add`} />, { closeBtn: true  })}  className="p-button w-full bg-primary "  />
+                    </CanView>
                 </div>
                 <div className="col-span-full " >
                     <IconField>
@@ -283,6 +313,7 @@ const UsersListPage = (componentProps) => {
                                 <Column  field="email" header="Email" body={EmailTemplate}  ></Column>
                                 <Column  field="phone" header="Phone" body={PhoneTemplate}  ></Column>
                                 <Column  field="username" header="Username"   ></Column>
+                                <Column  field="user_role_id" header="User Role Id" body={UserRoleIdTemplate}  ></Column>
                                 <Column headerStyle={{width: '2rem'}} headerClass="text-center" body={ActionButton}></Column>
                                 {/*PageComponentEnd*/}
                             </DataTable>

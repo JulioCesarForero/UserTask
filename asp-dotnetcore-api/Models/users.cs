@@ -14,9 +14,10 @@ namespace ASPRad.Models{
 		public string email { get; set; } = default!;
 		public string? phone { get; set; } = default!;
 		public string username { get; set; } = default!;
+		public string password { get; set; } = default!;
 		[Key]
 		public int user_id { get; set; } = default!;
-		public string password { get; set; } = default!;
+		public int? user_role_id { get; set; } = default!;
 	}
 
 	public class UsersRegisterDTO
@@ -48,6 +49,7 @@ namespace ASPRad.Models{
 		public string? phone { get; set; } = default!;
 		[RequiredIfEmpty]
 		public string username { get; set; } = default!;
+		public int? user_role_id { get; set; } = default!;
 
 	}
 
@@ -67,6 +69,7 @@ namespace ASPRad.Models{
 		[Compare("password")]
 		[NotMapped]
 		public string Confirm_Password { get; set; } = default!;
+		public int? user_role_id { get; set; } = default!;
 
 	}
 
@@ -80,6 +83,7 @@ namespace ASPRad.Models{
 		public string? phone { get; set; } = default!;
 		[RequiredIfEmpty]
 		public string username { get; set; } = default!;
+		public int? user_role_id { get; set; } = default!;
 
 	}
 

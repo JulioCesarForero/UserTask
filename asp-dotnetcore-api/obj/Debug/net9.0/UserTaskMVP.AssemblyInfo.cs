@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("UserTaskMVP")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ce364f51eabf657113b77b5a8e7b4c8b14ae1074")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+504da2c97dd614bc8e9b885702eb571b9e563094")]
 [assembly: System.Reflection.AssemblyProductAttribute("UserTaskMVP")]
 [assembly: System.Reflection.AssemblyTitleAttribute("UserTaskMVP")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

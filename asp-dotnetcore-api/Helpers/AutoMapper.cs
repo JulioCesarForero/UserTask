@@ -8,6 +8,12 @@ public class AutoMapping : Profile
     {
     		CreateMap<NotesAddDTO, Notes>();
 		CreateMap<NotesEditDTO, Notes>();
+		CreateMap<PermissionsAddDTO, Permissions>();
+		CreateMap<PermissionsEditDTO, Permissions>();
+		CreateMap<RolesAddDTO, Roles>();
+		CreateMap<RolesEditDTO, Roles>();
+		CreateMap<SysdiagramsAddDTO, Sysdiagrams>();
+		CreateMap<SysdiagramsEditDTO, Sysdiagrams>();
 		CreateMap<TaskprioritiesAddDTO, TaskPriorities>();
 		CreateMap<TaskprioritiesEditDTO, TaskPriorities>();
 		CreateMap<TasksAddDTO, Tasks>();

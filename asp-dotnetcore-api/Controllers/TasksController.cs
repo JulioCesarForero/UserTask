@@ -39,8 +39,8 @@ namespace ASPRad.Controller{
 		private readonly AppDBContext DB;
 		private readonly IMapper Mapper;
 		private readonly IWebHostEnvironment hostEnvironment;
-		
-		public TasksController(AppDBContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment environment, IConfiguration Configuration, EmailHelper mailer) :base(dbContext, httpContextAccessor, environment, Configuration)
+		private readonly Rbac rbac;
+		public TasksController(AppDBContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment environment, IConfiguration Configuration, EmailHelper mailer, Rbac _rbac) :base(dbContext, httpContextAccessor, environment, Configuration)
 		{
 			Config = Configuration;
 			Mailer = mailer;
@@ -48,7 +48,7 @@ namespace ASPRad.Controller{
 			DB = dbContext;
 			Mapper = mapper;
 			hostEnvironment = environment;
-			
+			rbac = _rbac;
 		}
 		
 

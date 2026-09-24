@@ -1,6 +1,7 @@
 
 import { BreadCrumb } from 'primereact/breadcrumb';
 import { Button } from 'primereact/button';
+import { CanView } from 'components/Can';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { ExportPageData } from 'components/ExportPageData';
@@ -17,6 +18,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { Title } from 'components/Title';
 import TaskprioritiesAddPage from 'pages/taskpriorities/Add';
 import useApp from 'hooks/useApp';
+import useAuth from 'hooks/useAuth';
 import useUtils from 'hooks/useUtils';
 
 import useListPage from 'hooks/useListPage';
@@ -53,7 +55,8 @@ const TaskprioritiesListPage = (componentProps) => {
 		...componentProps
 	}
 
-		const app = useApp();
+		const auth = useAuth();
+	const app = useApp();
 	const utils = useUtils();
 	const filterSchema = {
 		search: {
@@ -74,19 +77,29 @@ const TaskprioritiesListPage = (componentProps) => {
 		{
 			label: "View",
 			command: (event) => { app.navigate(`/taskpriorities/view/${data.priority_id}`) },
-			icon: "pi pi-eye"
+			icon: "pi pi-eye",
+			visible: () => auth.canView('taskpriorities/view')
 		},
 		{
 			label: "Edit",
 			command: (event) => { app.navigate(`/taskpriorities/edit/${data.priority_id}`) },
-			icon: "pi pi-pencil"
+			icon: "pi pi-pencil",
+			visible: () => auth.canView('taskpriorities/edit')
 		},
 		{
 			label: "Delete",
 			command: (event) => { deleteItem(data.priority_id) },
-			icon: "pi pi-trash"
+			icon: "pi pi-trash",
+			visible: () => auth.canView('taskpriorities/delete')
 		}
 	]
+	.filter((item) => {
+		if(item.visible){
+			return item.visible()
+		}
+		return true;
+	});
+
 		return (<PopupMenu items={items} />);
 	}
 	function PriorityIdTemplate(data){
@@ -168,9 +181,15 @@ const TaskprioritiesListPage = (componentProps) => {
 	function PageActionButtons() {
 		return (
 			<div className="flex flex-wrap gap-3 items-center">
-				<MultiDelete />
+	<CanView pagePath="taskpriorities/delete">
+		<MultiDelete />
+	</CanView>
+
 				<ExportData />
-				<ImportData />
+	<CanView pagePath="taskpriorities/importdata">
+		<ImportData />
+	</CanView>
+
 			</div>
 		);
 	}
@@ -222,7 +241,9 @@ const TaskprioritiesListPage = (componentProps) => {
         <div className="container-fluid">
             <div className="flex flex-wrap justify-between items-center gap-3">
                 <div className="col-span-full " >
-                    <Button label="Add Task Priority" icon="pi pi-plus"  onClick={()=>app.openPageDialog(<TaskprioritiesAddPage isSubPage apiPath={`/taskpriorities/add`} />, { closeBtn: true  })}  className="p-button w-full bg-primary "  />
+                    <CanView pagePath="taskpriorities/add">
+                        <Button label="Add Task Priority" icon="pi pi-plus"  onClick={()=>app.openPageDialog(<TaskprioritiesAddPage isSubPage apiPath={`/taskpriorities/add`} />, { closeBtn: true  })}  className="p-button w-full bg-primary "  />
+                    </CanView>
                 </div>
                 <div className="col-span-full " >
                     <IconField>

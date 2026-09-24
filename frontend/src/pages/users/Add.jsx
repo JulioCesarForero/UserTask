@@ -3,6 +3,8 @@ import { Formik, Form, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import { Button } from 'primereact/button';
 import { CheckDuplicate } from 'components/CheckDuplicate';
+import { DataSource } from 'components/DataSource';
+import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { ProgressSpinner } from 'primereact/progressspinner';
@@ -40,7 +42,8 @@ const UsersAddPage = (componentProps) => {
 		phone: yup.string().nullable().label("Phone"),
 		username: yup.string().required().label("Username"),
 		password: yup.string().required().label("Password"),
-		confirm_password: yup.string().required().label("Confirm Password").oneOf([yup.ref('password')], "Your passwords do not match")
+		confirm_password: yup.string().required().label("Confirm Password").oneOf([yup.ref('password')], "Your passwords do not match"),
+		user_role_id: yup.string().nullable().label("User Role Id")
 	});
 
 	
@@ -51,6 +54,7 @@ const UsersAddPage = (componentProps) => {
 		username: '', 
 		password: '', 
 		confirm_password: '', 
+		user_role_id: '', 
 	}
 
 	
@@ -183,6 +187,24 @@ const UsersAddPage = (componentProps) => {
                                             <div className="col-span-full md:col-span-9">
                                                 <Password name="confirm_password" id="confirm_password" className={inputClassName(formik?.errors?.comfirm_password)} inputClassName="w-full" style={{display: 'block'}} feedback={false} toggleMask  value={formik.values.confirm_password} onChange={formik.handleChange} label="Confirm Password" placeholder="Confirm Password"  />
                                                 <ErrorMessage name="confirm_password" component="span" className="p-error" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-span-full">
+                                        <div className="grid grid-cols-12 gap-3">
+                                            <div className="col-span-full md:col-span-3">
+                                                User Role Id 
+                                            </div>
+                                            <div className="col-span-full md:col-span-9">
+                                                <DataSource   apiPath="components_data/user_role_id_option_list"  >
+                                                    {
+                                                    ({ response }) => 
+                                                    <>
+                                                    <Dropdown  name="user_role_id"     optionLabel="label" optionValue="value" value={formik.values.user_role_id} onChange={formik.handleChange} options={response} label="User Role Id"  placeholder="Select a value ..."  className={inputClassName(formik?.errors?.user_role_id)}   />
+                                                    <ErrorMessage name="user_role_id" component="span" className="p-error" />
+                                                    </>
+                                                    }
+                                                </DataSource>
                                             </div>
                                         </div>
                                     </div>

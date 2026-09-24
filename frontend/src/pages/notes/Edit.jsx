@@ -13,7 +13,7 @@ import useApp from 'hooks/useApp';
 
 import useEditPage from 'hooks/useEditPage';
 const defaultProps = {
-	primaryKey: 'created_by',
+	primaryKey: 'note_id',
 	pageName: 'notes',
 	apiPath: 'notes/edit',
 	routeName: 'notesedit',
